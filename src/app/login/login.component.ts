@@ -1,18 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthencationService } from '../shared/authencation.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-login',
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 	logInForm: FormGroup;
 	errorMessage = 'AuthenTication fail';
 	displayError = false;
+	subscriptions: Subscription[] = [];
+
 
 	constructor(
 		private router: Router,
@@ -22,23 +25,30 @@ export class LoginComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		this.logInForm = this.formBuilder.group(
-			{
-				email: ['test@test.fr', [Validators.email, Validators.required]],
-				password: ['12345', [Validators.required]]
-			}
-		);
+		this.logInForm = this.formBuilder.group({
+			email: ['test@test.fr', [Validators.email, Validators.required]],
+			password: ['12345', [Validators.required]]
+		});
+
+		const isloggedSubs = this.authService.isLogged()
+			.subscribe((logged) => {
+				if (logged) {
+					this.router.navigate(['/account/list']);
+				}
+			});
+		this.subscriptions.push(isloggedSubs);
+	}
+	ngOnDestroy(): void {
+		this.subscriptions.forEach(subs => subs.unsubscribe());
 	}
 
 	public onSubmit(): void {
-		console.log('LoginComponent -> onSubmit -> this.logInForm', this.logInForm);
 		this.authService.login(this.logInForm.value)
 			.subscribe(
 				res => {
-					console.log('LoginComponent -> onSubmit -> res', res);
 					if (res) {
 						this.authService.setLocalStorage(res);
-						this.router.navigateByUrl('/account');
+						this.router.navigateByUrl('/account/list');
 						return;
 					}
 				},

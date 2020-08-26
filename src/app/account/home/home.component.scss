@@ -17,7 +17,8 @@ $header-height: 100px;
         }
 
         .icon-container {
-            width: auto;
+			width: auto;
+			cursor: pointer;
 
             &:hover {
                 color: red;

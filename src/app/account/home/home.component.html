@@ -1,7 +1,7 @@
 <div class="home-container" fxLayout="column">
 	<div class="header-container" fxLayout="row" fxLayoutAlign="space-between center">
 		<div class="title">TODO APP</div>
-		<div class="icon-container" matTooltip="Disconnection"
+		<div (click)="logOut()" class="icon-container" matTooltip="Disconnection"
 			aria-label="Button that displays a tooltip when focused or hovered over">
 			<span class="material-icons"> exit_to_app </span>
 		</div>

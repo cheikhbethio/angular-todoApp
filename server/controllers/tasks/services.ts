@@ -4,36 +4,36 @@ import * as moment from 'moment';
 
 export function createTask(req: Request, res: Response): any {
 
-  console.log('Creating new Task ...');
+	console.log('Creating new Task ...');
 
-  const newTask = {
-    id: TASKS.length + 1,
-    ...req.body,
-    date: moment().toDate()
-  };
+	const newTask = {
+		id: TASKS.length + 1,
+		...req.body,
+		date: moment().toDate()
+	};
 
-  TASKS.push(newTask);
+	TASKS.push(newTask);
 
-  setTimeout(() => {
-    res.status(200).json(newTask);
-  }, 500);
+	setTimeout(() => {
+		res.status(200).json(newTask);
+	}, 500);
 }
 
 
 
 export function deleteTask(req: Request, res: Response): any {
 
-  const id = Number(req.params.id);
+	const id = Number(req.params.id);
 
-  const taskIndex = TASKS.findIndex(task => task.id === id);
+	const taskIndex = TASKS.findIndex(task => task.id === id);
 
-  TASKS.splice(taskIndex, 1);
+	TASKS.splice(taskIndex, 1);
 
-  setTimeout(() => {
+	setTimeout(() => {
 
-    res.status(200).json({ id });
+		res.status(200).json({ id });
 
-  }, 500);
+	}, 500);
 
 }
 
@@ -41,44 +41,45 @@ export function deleteTask(req: Request, res: Response): any {
 
 export function getAllTasks(req: Request, res: Response): any {
 
-  console.log('Retrieving courses data ...');
+	console.log('Retrieving courses data ...');
 
-  setTimeout(() => {
-    return res.status(200).json({ payload: TASKS });
-  }, 500);
+	setTimeout(() => {
+		return res.status(200).json({ payload: TASKS });
+	}, 500);
 }
 
 
 export function getTaskById(req: Request, res: Response): any {
 
-  const id = Number(req.params.id);
+	const id = Number(req.params.id);
 
-  const foundTask = TASKS.find(task => task.id === id);
+	const foundTask = TASKS.find(task => task.id === id);
 
-  setTimeout(() => {
+	setTimeout(() => {
 
-    res.status(200).json(foundTask);
+		res.status(200).json(foundTask);
 
-  }, 500);
+	}, 500);
 
 
 }
 
 
 export function updateTask(req: Request, res: Response): any {
+	const id = Number(req.params.id);
+	const changes = req.body;
+	const index = TASKS.findIndex(task => task.id === id);
+	const taskToUpdate = TASKS[index];
 
-  const id = Number(req.params.id);
-  const changes = req.body;
-  let taskToUpdate = TASKS.find(task => task.id === id);
+	delete changes.date;
+	TASKS[index] = {
+		...taskToUpdate,
+		...changes,
+	};
 
-  taskToUpdate = {
-    ...TASKS[id],
-    ...changes
-  };
-
-  setTimeout(() => {
-    res.status(200).json(TASKS[id]);
-  }, 500);
+	setTimeout(() => {
+		res.status(200).json(TASKS[id]);
+	}, 500);
 
 }
 
