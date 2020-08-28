@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+    main:
+        container_name: main
+        build:
+            context: .
+            # dockerfile: Dockerfile
+            target: development
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        ports:
+            - 3000:3000
+        command: npm run start:dev
+        networks:
+            - webnet
+        depends_on:
+            - postgres
+    postgres:
+        container_name: postgres-todo-app
+        image: postgres:12
+        networks:
+            - webnet
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_DB: postgres-todo-app
+            PG_DATA: /var/lib/postgresql/data
+            POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+            - 5432:5432
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+networks:
+    webnet:
+volumes:
+    pgdata:
