@@ -21,8 +21,7 @@ export class ListService {
 	}
 
 	public getAllTasks(): Observable<Task[]> {
-		return this.httpClient.get<Task[]>('/api/tasks/')
-			.pipe(map((result: any) => result.payload));
+		return this.httpClient.get<Task[]>('/api/tasks/');
 	}
 
 	public deleteTask(id): Observable<any> {
@@ -42,12 +41,11 @@ export class ListService {
 		return this.httpClient.get<Task[]>('/api/tasks/')
 			.pipe(
 				map((result: any) => {
-					const datas = result.payload;
 					return {
-						total: datas.length,
-						done: datas.filter(task => task.done).length,
-						undone: datas.filter(task => !task.done).length,
-						past: datas.filter(task => task.date < new Date()).length
+						total: result.length,
+						done: result.filter(task => task.done).length,
+						undone: result.filter(task => !task.done).length,
+						past: result.filter(task => task.date < new Date()).length
 					};
 				})
 			);
