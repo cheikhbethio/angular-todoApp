@@ -1,11 +1,14 @@
 import { Controller, Get, Param, Body, Put, Post, Delete } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './user.dto';
+import { LoggerService } from 'src/shared/logger/logger.service';
 
 @Controller('api/users')
 export class UserController {
-	constructor(private userService: UserService) {
-	}
+	constructor(
+		private userService: UserService,
+		private logger: LoggerService
+	) { }
 
 	@Get('')
 	getAllUsers(): UserDto[] {
